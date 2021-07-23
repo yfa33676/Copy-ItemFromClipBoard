@@ -1,14 +1,14 @@
 $ClipboardList = Get-Clipboard -Format FileDropList
 if($ClipboardList.count -eq 0){
     try{
-        $ClipBoardItemList = Get-Clipboard | % Trim | Where-Object {$_ -ne ""} | Get-Item -ErrorAction Stop
+        $ClipBoardItemList = Get-Clipboard | % Trim | Where-Object {$_ -ne ""} | Get-Item -Force -ErrorAction Stop
     }catch{
         Read-Host "フォルダまたはファイルをクリップボードにコピーしてください" | Out-Null
         return
     }
     $ItemList = $ClipBoardItemList | Sort-Object Name | Sort-Object Mode -Descending
 } else{
-    $ItemList = $ClipboardList | Get-Item  | Sort-Object Name | Sort-Object Mode -Descending
+    $ItemList = $ClipboardList | Get-Item -Force | Sort-Object Name | Sort-Object Mode -Descending
 }
 while($true){
     Clear-Host
