@@ -1,3 +1,4 @@
+Clear-Host
 $ClipboardList = Get-Clipboard -Format FileDropList
 if($ClipboardList.count -eq 0){
     try{
