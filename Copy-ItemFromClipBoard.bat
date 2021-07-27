@@ -1,1 +1,1 @@
-PowerShell .\Copy-ItemFromClipBoard.ps1
+PowerShell .\Copy-ItemFromClipBoard.ps1 %*

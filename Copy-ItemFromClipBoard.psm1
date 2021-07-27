@@ -1,15 +1,19 @@
 function Copy-ItemFromClipBoard{
-    $ClipboardList = Get-Clipboard -Format FileDropList
-    if($ClipboardList.count -eq 0){
-        try{
-            $ClipBoardItemList = Get-Clipboard | % Trim | Where-Object {$_ -ne ""} | Get-Item -Force -ErrorAction Stop
-        }catch{
-            Read-Host "フォルダまたはファイルをクリップボードにコピーしてください" | Out-Null
-            return
-        }
-        $ItemList = $ClipBoardItemList | Sort-Object Name | Sort-Object Mode -Descending
-    } else{
-        $ItemList = $ClipboardList | Get-Item -Force | Sort-Object Name | Sort-Object Mode -Descending
+    if($null -eq $args[0]){
+      $ClipboardList = Get-Clipboard -Format FileDropList
+      if($ClipboardList.count -eq 0){
+          try{
+              $ClipBoardItemList = Get-Clipboard | % Trim | Where-Object {$_ -ne ""} | Get-Item -Force -ErrorAction Stop
+          }catch{
+              Read-Host "フォルダまたはファイルをクリップボードにコピーしてください" | Out-Null
+              return
+          }
+          $ItemList = $ClipBoardItemList | Sort-Object Name | Sort-Object Mode -Descending
+      } else{
+          $ItemList = $ClipboardList | Get-Item -Force | Sort-Object Name | Sort-Object Mode -Descending
+      }
+    }else{
+      $ItemList = $args | Get-Item -Force | Sort-Object Name | Sort-Object Mode -Descending
     }
     while($true){
         Clear-Host
