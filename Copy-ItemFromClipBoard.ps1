@@ -18,13 +18,15 @@ while($true){
     Clear-Host
     Read-Host "選択したフォルダまたはファイルをデスクトップにコピーします" | Out-Null
     try{
-        $ItemList | Out-Host
+        $ItemList | Sort-Object PSParentPath, Attributes | Out-Host
     } catch{
     }
     "1 ... フォルダ配下も含めてコピー"
     "2 ... フォルダ配下を含めずにコピー"
-    "3 ... コピー対象をさらに絞り込む"
-    "4 ... コピーをキャンセル"
+    "3 ... コピー対象を絞り込む"
+    "4 ... ディレクトリをすべて展開する"
+    "5 ... ディレクトリを1階層だけ展開する(Win10以降)"
+    "6 ... コピーをキャンセル"
     $return = Read-Host
     if($return -eq 1){
         $Recurse = $true
@@ -35,12 +37,18 @@ while($true){
         break
     }
     if($return -eq 3){
-        $ItemList = $ItemList | Out-GridView -OutputMode Multiple -Title "コピー対象をさらに絞り込む"
-        if($ItemList.count -eq 0){
-            return
+        $SelectedItemList = $ItemList | Sort-Object PSParentPath, Attributes | Select-Object Mode, LastWriteTime, Length, Name, FullName | Out-GridView -OutputMode Multiple -Title "コピー対象を絞り込む" | % FullName | Get-Item
+        if($null -ne $SelectedItemList){
+          $ItemList = $SelectedItemList
         }
     }
     if($return -eq 4){
+        $ItemList = $ItemList | Get-ChildItem -Recurse -Force | Sort-Object -Unique
+    }
+    if($return -eq 5){
+        $ItemList = $ItemList | Get-ChildItem -Recurse -Depth 1 | Sort-Object -Unique
+    }
+    if($return -eq 6){
         return
     }
 }
